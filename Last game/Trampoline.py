@@ -1,5 +1,4 @@
 from turtle import *
-from junglehunger import*
 screen = getscreen()
 screen.register_shape("trampoline.gif")
 class Trampoline (Turtle):

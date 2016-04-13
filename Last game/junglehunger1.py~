@@ -1,20 +1,12 @@
 from turtle import *
 from random import randint
-from Monkey import *
-from Hearts import *
+from junglehunger import *
 from Trampoline import *
 from Fruit import *
-import time
 tracer(0)
 ht()
 
 fruits_list = []
-
-running = True
-
-def my_exit():
-	global running	
-	running = False
 
 canvas=getcanvas() # the canvas is the area that the turtle is moving (the white background)
 CANVAS_WIDTH = canvas.winfo_width() # here we get canvas(screen) width
@@ -22,27 +14,16 @@ CANVAS_HEIGHT = canvas.winfo_height() # here we get the canvas(screen) height
 screen = getscreen()
 #screen.register_shape("monkey.gif")
 
-# This function returns the width of the screen
-def get_screen_width():
-	global CANVAS_WIDTH
-	return int(CANVAS_WIDTH/2-10)
-
-# This function returns the height of the screen
-def get_screen_height():
-	global CANVAS_HEIGHT
-	return int(CANVAS_HEIGHT/2-5)
 
 bgpic('jungle.gif')
 
-screen.register_shape("heart.gif")
+
 screen.register_shape("banana.gif")
 screen.register_shape("apple.gif")
 screen.register_shape("grapes.gif")
 screen.register_shape("orange.gif")
 screen.register_shape("pineapple.gif")
 screen.register_shape("strawberry.gif")
-
-
 
 fruits = ["apple.gif", "banana.gif", "grapes.gif", "orange.gif", "pineapple.gif", "strawberry.gif",]
 
@@ -63,8 +44,6 @@ while(j <= 3):
 penup()
 goto(500,500)
 
-heart_list = [Heart("heart.gif" , - get_screen_width() + 20 ,- get_screen_height() + 20), Heart("heart.gif" , - get_screen_width() + 70 ,- get_screen_height() + 20), Heart("heart.gif" , - get_screen_width() + 120 ,- get_screen_height() + 20)]
-
 def collided(ball1,obj):
 	#object measurements
 	otop= obj.ycor()+obj.height/2
@@ -83,13 +62,20 @@ def collided(ball1,obj):
 	else:
 		return False
 
-lives = 3
+lives=3
+# This function returns the width of the screen
+def get_screen_width():
+	global CANVAS_WIDTH
+	return int(CANVAS_WIDTH/2-10)
+
+# This function returns the height of the screen
+def get_screen_height():
+	global CANVAS_HEIGHT
+	return int(CANVAS_HEIGHT/2-5)
 
 def borders(ball):
 	global CANVAS_WIDTH
 	global CANVAS_HEIGHT
-	global lives 
-	global ball1
 	width = get_screen_width()
 	height = get_screen_height()
 	x =ball.xcor()
@@ -101,32 +87,25 @@ def borders(ball):
 	if (y > height): #top border
 		ball.dy=-ball.dy
 	if (y < -height): 
-		lives = lives - 1
-		if (lives == 0):
-			goto(0, 0)
-			write("You Lost !", move=False, align="center", font=("Arial", 80, "normal"))
-			time.sleep(3)
-			my_exit()
-		else:
-			heart_list[lives].ht()
-			heart_list.remove(heart_list[lives])
-			ball1.goto(0, 0)
+		lives=-1
+		if (lives ==0):
+			exit()
     
 
-ball1= Ball(35,-0.4,0.4,2,3,2,"square")
+ball1= Ball(1,0.1,0.1,2,3,2,"square")
 
-t = Trampoline(0,1,-230,8,4)
+t = Trampoline(0,1,-230,2,1)
 def right(event):  #paddle
 	global t
 	print("right")
-	t.dx=40
+	t.dx=20
 	t.move()
 	t.dx=0
 
 def left(event):    #paddle
 	global t
 	print("left")
-	t.dx=-40
+	t.dx=-20
 	t.move()
 	t.dx=0
 
@@ -134,9 +113,10 @@ canvas.bind("<Right>", right)
 canvas.bind("<Left>", left)
 screen.listen()
 
-print (len(fruits_list))
 
-while running:
+   
+print (len(fruits_list))
+while True:
 	ball1.move()
 	t.move()
 	borders(ball1)
@@ -147,9 +127,4 @@ while running:
 			ball1.dy*=-1
 			f.hideturtle()
 			fruits_list.remove(f)
-	if(len(fruits_list) == 0):
-		goto(0, 0)
-		write("You Won !", move=False, align="center", font=("Arial", 80, "normal"))
-		time.sleep(3)
-		my_exit()
 	screen.update()
